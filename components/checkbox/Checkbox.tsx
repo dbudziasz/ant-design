@@ -40,6 +40,7 @@ export interface AbstractCheckboxProps<T> {
   type?: string;
   skipGroup?: boolean;
   required?: boolean;
+  ref?: React.Ref<CheckboxRef>;
 }
 
 export interface CheckboxChangeEventTarget extends CheckboxProps {
@@ -57,10 +58,7 @@ export interface CheckboxProps extends AbstractCheckboxProps<CheckboxChangeEvent
   indeterminate?: boolean;
 }
 
-const InternalCheckbox: React.ForwardRefRenderFunction<CheckboxRef, CheckboxProps> = (
-  props,
-  ref,
-) => {
+const Checkbox: React.FC<CheckboxProps> = (props) => {
   const {
     prefixCls: customizePrefixCls,
     className,
@@ -72,6 +70,7 @@ const InternalCheckbox: React.ForwardRefRenderFunction<CheckboxRef, CheckboxProp
     onMouseLeave,
     skipGroup = false,
     disabled,
+    ref,
     ...restProps
   } = props;
   const { getPrefixCls, direction, checkbox } = React.useContext(ConfigContext);
@@ -82,6 +81,7 @@ const InternalCheckbox: React.ForwardRefRenderFunction<CheckboxRef, CheckboxProp
 
   const prevValue = React.useRef(restProps.value);
   const checkboxRef = React.useRef<CheckboxRef>(null);
+  // @ts-ignore
   const mergedRef = composeRef(ref, checkboxRef);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -175,8 +175,6 @@ const InternalCheckbox: React.ForwardRefRenderFunction<CheckboxRef, CheckboxProp
     </Wave>,
   );
 };
-
-const Checkbox = React.forwardRef<CheckboxRef, CheckboxProps>(InternalCheckbox);
 
 if (process.env.NODE_ENV !== 'production') {
   Checkbox.displayName = 'Checkbox';
